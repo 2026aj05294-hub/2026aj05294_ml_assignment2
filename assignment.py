@@ -16,7 +16,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score, precision_score, reca
 os.makedirs('model', exist_ok=True)
 
 # 1. Load the data
-df = pd.read_csv('WA_Fn-UseC_-Telco-Customer-Churn.csv')
+df = pd.read_csv('https://raw.githubusercontent.com/2026aj05294-hub/2026aj05294_ml_assignment2/refs/heads/main/dataset/WA_Fn-UseC_-Telco-Customer-Churn.csv')
 
 # 2. Preprocessing
 # Handle missing values in TotalCharges
