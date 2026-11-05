@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import joblib
 import os
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.metrics import accuracy_score, roc_auc_score, precision_score, recall_score, f1_score, matthews_corrcoef, \
     confusion_matrix, classification_report
 
@@ -37,10 +39,10 @@ if uploaded_file is not None:
             try:
                 y_prob = model.predict_proba(X_test)[:, 1]
             except AttributeError:
-                y_prob = [0] * len(y_test)  # Fallback if probability is not supported
+                y_prob = [0] * len(y_test)
 
             # Calculate Metrics
-            st.write(f"### Evaluation Metrics for {selected_model_name}")
+            st.write(f"### Evaluation Metrics for {selected_model_name.replace('_', ' ')}")
             col1, col2, col3 = st.columns(3)
             col1.metric("Accuracy", round(accuracy_score(y_test, y_pred), 4))
             col2.metric("AUC Score", round(roc_auc_score(y_test, y_prob), 4))
@@ -51,15 +53,32 @@ if uploaded_file is not None:
             col5.metric("F1 Score", round(f1_score(y_test, y_pred), 4))
             col6.metric("MCC", round(matthews_corrcoef(y_test, y_pred), 4))
 
-            # Confusion Matrix
-            st.write("### Confusion Matrix")
-            cm = confusion_matrix(y_test, y_pred)
-            st.code(cm)
+            st.divider()
 
-            # Classification Report
-            st.write("### Classification Report")
-            report = classification_report(y_test, y_pred)
-            st.text(report)
+            col_cm, col_cr = st.columns(2)
+
+            with col_cm:
+                st.write("### Confusion Matrix")
+                cm = confusion_matrix(y_test, y_pred)
+
+                # Create a heatmap using seaborn
+                fig, ax = plt.subplots(figsize=(5, 4))
+                sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False,
+                            xticklabels=['Retained (0)', 'Churned (1)'],
+                            yticklabels=['Retained (0)', 'Churned (1)'])
+                plt.ylabel('Actual Label')
+                plt.xlabel('Predicted Label')
+                st.pyplot(fig)
+
+            with col_cr:
+                st.write("### Classification Report")
+                # Convert the classification report to a dictionary, then to a DataFrame
+                report_dict = classification_report(y_test, y_pred, output_dict=True)
+                report_df = pd.DataFrame(report_dict).transpose()
+
+                # Display as a styled dataframe with 4 decimal places
+                report_df = report_df.drop(['accuracy', 'macro avg', 'weighted avg'], errors='ignore')
+                st.dataframe(report_df.style.format(precision=4), use_container_width=True)
 
         else:
             st.error("Model file not found. Ensure models are inside the 'model' directory.")
