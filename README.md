@@ -10,8 +10,11 @@ The objective of this project is to build and evaluate multiple Machine Learning
 - **Target Variable:** `Churn` (Yes = 1, No = 0). 
 - **Instances:** 7,043 rows. Minimum thresholds (Features > 12, Instances > 500) are met.
 
-### c. Github Repository Link
+### c.a Github Repository Link
 *https://github.com/2026aj05294-hub/2026aj05294_ml_assignment2/tree/main*
+
+### c.b Streamlit App Link
+*https://2026aj05294mlassignment2-uhn6z6y3aidppbgwrzf7er.streamlit.app*
 
 ### d. Models Used & Evaluation Metrics
 
