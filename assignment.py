@@ -1,7 +1,10 @@
+import io
+
 import pandas as pd
 import joblib
 import os
 
+import requests
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
@@ -16,7 +19,8 @@ from sklearn.metrics import accuracy_score, roc_auc_score, precision_score, reca
 os.makedirs('model', exist_ok=True)
 
 # 1. Load the data
-df = pd.read_csv('https://raw.githubusercontent.com/2026aj05294-hub/2026aj05294_ml_assignment2/refs/heads/main/dataset/WA_Fn-UseC_-Telco-Customer-Churn.csv')
+response = requests.get('https://raw.githubusercontent.com/2026aj05294-hub/2026aj05294_ml_assignment2/refs/heads/main/dataset/WA_Fn-UseC_-Telco-Customer-Churn.csv')
+df = pd.read_csv(io.StringIO(response.text))
 
 # 2. Preprocessing
 # Handle missing values in TotalCharges
